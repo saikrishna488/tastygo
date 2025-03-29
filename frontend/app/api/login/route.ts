@@ -1,52 +1,67 @@
 import { connectToDB } from "@/app/lib/mongodb";
-import { NextResponse as res,NextRequest } from "next/server";
+import { NextResponse as res, NextRequest } from "next/server";
 import userModel from '@/app/models/userModel.js'
+import jwt from 'jsonwebtoken';
 
 
-interface User{
-    email :string,
-    password :string
+interface User {
+    email: string,
+    password: string
 }
 
-export async function POST(req : Request){
-    try{
+export async function POST(req: Request) {
+    try {
 
         await connectToDB();
-        const {email, password}:User = await req.json();
+        const { email, password }: User = await req.json();
 
-        if(!email || !password){
+        if (!email || !password) {
             return res.json({
-                res : false,
-                msg : "Incomplete data"
-            },{status:400})
+                res: false,
+                msg: "Incomplete data"
+            }, { status: 400 })
         }
 
-        const user = await userModel.findOne({email})
+        const user = await userModel.findOne({ email })
 
-        if(!user){
+        if (!user) {
             return res.json({
-                res : false,
-                msg : "User doesn't exist"
-            },{status:404})
+                res: false,
+                msg: "User doesn't exist"
+            }, { status: 404 })
         }
 
-        const {password:pwd, ...userObj} = user._doc;
+        const { password: pwd, ...userObj } = user._doc;
 
-        if( user.password === password){
-            return res.json({
-                res : true,
-                msg : "Login Successful",
-                user : userObj
-            },{status:200})
+        if (user.password === password) {
+
+            const token = jwt.sign({ id: user._id, email: user.email }, "SAI", {
+                expiresIn: "30d",
+            });
+
+
+            const response = res.json({
+                res: true,
+                msg: "Login Successful",
+                user: userObj,
+                token
+            }, { status: 200 })
+
+            response.headers.set(
+                "Set-Cookie",
+                `token=${token}; HttpOnly; Path=/; Max-Age=${30 * 24 * 60 * 60}; SameSite=Strict;`
+            );
+
+            return response;
         }
 
     }
-    catch(err){
+    catch (err) {
         console.log(err)
 
         return res.json({
-            res : false,
-            msg : "Server error",
-        },{status:500})
+            res: false,
+            msg: "Server error",
+        }, { status: 500 })
     }
 }

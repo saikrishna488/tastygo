@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { Star, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const newItems = [
   { id: 1, name: "Cheese Pizza", price: "$12.99", restaurant: "Pizza House", rating: 4.5, deliveryTime: "30 min", image: "/pizza.webp" },
@@ -60,13 +61,12 @@ const NewItems = () => {
 
       {/* View More Button */}
       <div className="mt-6 text-center">
-        <a
-          href="/all-items"
-          onClick={()=>router.push('/items')}
+        <Link
+          href={"/items"}
           className="inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg text-sm font-semibold transition"
         >
           View More
-        </a>
+        </Link>
       </div>
     </section>
 

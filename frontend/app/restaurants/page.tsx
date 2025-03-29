@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image";
 import { Star } from "lucide-react"; // Using Lucide icons for the star rating
+import Header from "../components/Header";
 
 interface Restaurant {
   id: number;
@@ -22,6 +23,7 @@ const restaurants: Restaurant[] = [
 const Restaurants = () => {
   return (
     <div className="w-full px-4 pt-20 mx-auto lg:w-[80%]">
+      <Header/>
       <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Popular Restaurants</h2>
 
       {/* Grid Layout for Responsive Design */}

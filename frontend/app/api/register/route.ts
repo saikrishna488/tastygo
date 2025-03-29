@@ -1,4 +1,5 @@
 import userModel from "@/app/models/userModel";
+import { connectToDB } from "@/app/lib/mongodb";
 import { NextResponse as res } from "next/server";
 
 export async function POST(req: Request) {

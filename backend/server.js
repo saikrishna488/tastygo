@@ -2,14 +2,20 @@ import express from 'express'
 const app = express()
 import cors from 'cors'
 const port = 5000 || process.env.PORT
-import userRoute from './routes/user_auth.js'
+import userRoute from './routes/userRoute.js'
+import cookieParser from 'cookie-parser'
+import clientRoute from './routes/clientRoute.js'
 
 
 app.use(express.json())
-app.use(cors())
+app.use(cookieParser());
+app.use(cors({
+    origin: "http://localhost:3000", // Replace with your frontend URL
+    credentials: true, // Allow credentials (cookies)
+}));
 
 //connecting database
-import './db/config.js'
+import './config/db.js'
 
 app.get('/',(req,res)=>{
     res.send("api is live")

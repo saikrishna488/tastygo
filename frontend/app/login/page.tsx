@@ -23,10 +23,10 @@ const Login = () => {
         return;
       }
 
-      const res = await axios.post("/api/login", {
+      const res = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+"/login", {
         email,
         password,
-      });
+      },{ withCredentials: true });
 
       const data = res.data;
 
@@ -36,6 +36,7 @@ const Login = () => {
         router.push("/");
       }
     } catch (err) {
+      console.log(err)
       toast.error("Invalid email or password");
     }
   };
