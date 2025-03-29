@@ -1,4 +1,4 @@
 import {atom} from 'jotai'
 
 // user state
-export const userAtom = atom({})
+export const userAtom = atom<any>({})
