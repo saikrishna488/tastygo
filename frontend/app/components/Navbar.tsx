@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ShoppingCart, User, Bell, Package, LogOut } from "lucide-react";
 import { useAtom } from "jotai";
-import { userAtom } from "@/states/global_states.js";
+import { userAtom } from "@/states/global_states";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
