@@ -11,6 +11,11 @@ const itemSchema = new mongoose.Schema({
         required : true
     },
 
+    restaurant_name:{
+        type: String,
+        required: true
+    },
+
     price : {
         type : Number,
         required : true

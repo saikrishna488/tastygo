@@ -114,7 +114,7 @@ const NewItems = () => {
 
                             {/* Price & Rating */}
                             <div className="flex items-center justify-between mt-1">
-                                <span className="text-sm font-bold text-red-500">{item.price}</span>
+                                <span className="text-sm font-bold text-red-500">{item.price}.Rs</span>
                                 <div className="flex items-center text-xs">
                                     <Star size={14} className="text-yellow-400 mr-1" />
                                     <span className="text-gray-700 dark:text-gray-300">{item.rating}</span>

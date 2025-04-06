@@ -165,6 +165,8 @@ router.post('/item', async (req, res) => {
             })
         }
 
+        const restaurant = await restaurantModel.findOne({client_id})
+
         let uploadedImage = null
 
         // Upload image to Cloudinary
@@ -174,7 +176,7 @@ router.post('/item', async (req, res) => {
             })
         }
 
-        const item = await itemModel.create({ name, client_id, price, description, image_url : image && uploadedImage.secure_url })
+        const item = await itemModel.create({ name, client_id, price, description, image_url : image && uploadedImage.secure_url, restaurant_name: restaurant.name })
 
         return res.status(200).json({
             res: true,
