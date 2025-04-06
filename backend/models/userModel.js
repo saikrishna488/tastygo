@@ -14,7 +14,16 @@ const userSchema = new mongoose.Schema({
     password : {
         type : String,
         required : true
-    }
+    },
+
+    location : {
+        type : [Number],
+    },
+
+    type: {
+        type: String,
+        default: "u"
+    },
 })
 
 const userModel = mongoose.models.user || mongoose.model('user',userSchema)

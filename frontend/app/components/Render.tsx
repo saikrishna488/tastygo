@@ -4,10 +4,10 @@ import axios from "axios"
 import { useAtom } from "jotai"
 import { useEffect } from "react"
 import toast from "react-hot-toast"
+import {useGeolocated} from 'react-geolocated';
 
 export default function Render() {
     const [user, setUser] = useAtom<any>(userAtom)
-
 
     const render = async () => {
         try {
@@ -34,6 +34,8 @@ export default function Render() {
         if(!user.name){
             render()
         }
+
+        
         
     },[])
 

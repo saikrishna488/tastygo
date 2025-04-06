@@ -3,6 +3,9 @@ import Image from "next/image";
 import { Star, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const newItems = [
   { id: 1, name: "Cheese Pizza", price: "$12.99", restaurant: "Pizza House", rating: 4.5, deliveryTime: "30 min", image: "/pizza.webp" },
@@ -18,41 +21,67 @@ const newItems = [
 
 const NewItems = () => {
 
-  const router = useRouter()
+  const router = useRouter();
+  const [items,setItems] = useState<any>([])
+
+
+  useEffect(()=>{
+
+    const fetchItems = async()=>{
+
+      const res = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+"/items")
+      const data = res.data
+
+      if(data.res){
+        setItems(data.items)
+      }
+      else{
+        toast.error("Failed to load items")
+        throw new Error("Failed to load items")
+        
+      }
+    }
+
+    fetchItems()
+
+  },[])
+
+
+
   return (
     <section className="max-w-7xl mx-auto px-4 py-6">
       {/* Grid Layout (Smaller Size) */}
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-4 md:grid-cols-5 gap-3">
-        {newItems.map((item) => (
+        {items.map((item:any) => (
           <div
-            key={item.id}
-            onClick={()=> router.push('/item/752356')}
+            key={item._id}
+            onClick={() => router.push('/item/'+item._id)}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105"
           >
             {/* Smaller Image */}
             <div className="relative w-full h-28 sm:h-32">
-              <Image src={item.image} alt={item.name} layout="fill" objectFit="cover" />
+              <Image src={item.image_url} alt={item.name} layout="fill" objectFit="cover" />
             </div>
 
             {/* Compact Details */}
             <div className="p-2">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{item.name}</h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400">{item.restaurant}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{item.restaurant_name}</p>
 
               {/* Price & Rating */}
               <div className="flex items-center justify-between mt-1">
-                <span className="text-sm font-bold text-red-500">{item.price}</span>
+                <span className="text-sm font-bold text-red-500">{item.price}.Rs</span>
                 <div className="flex items-center text-xs">
                   <Star size={14} className="text-yellow-400 mr-1" />
-                  <span className="text-gray-700 dark:text-gray-300">{item.rating}</span>
+                  <span className="text-gray-700 dark:text-gray-300">{item.rating || 5}</span>
                 </div>
               </div>
 
               {/* Delivery Time */}
               <div className="flex items-center mt-1 text-gray-600 dark:text-gray-400 text-xs">
                 <Clock size={14} className="mr-1" />
-                <span>{item.deliveryTime}</span>
+                <span>{item.deliveryTime || "30 mins"}</span>
               </div>
             </div>
           </div>

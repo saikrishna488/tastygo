@@ -5,9 +5,11 @@ const port = 5000 || process.env.PORT
 import userRoute from './routes/userRoute.js'
 import cookieParser from 'cookie-parser'
 import clientRoute from './routes/clientRoute.js'
+import partnerRoute from './routes/partnerRoute.js'
 
 
-app.use(express.json())
+
+app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 app.use(cors({
     origin: "http://localhost:3000", // Replace with your frontend URL
@@ -22,5 +24,7 @@ app.get('/',(req,res)=>{
 })
 
 app.use('/',userRoute)
+app.use('/',clientRoute)
+app.use('/',partnerRoute)
 
 app.listen(port,()=>console.log("Server is Running http://127.0.0.1:"+port))

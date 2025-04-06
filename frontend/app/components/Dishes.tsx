@@ -3,14 +3,14 @@ import { Pizza, Drumstick, UtensilsCrossed } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const dishes = [
-  { name: "Pizza", icon: <Pizza size={18} className="text-red-500" /> },
-  { name: "Biryani", icon: <Drumstick size={18} className="text-yellow-500" /> },
-  { name: "Chinese", icon: <UtensilsCrossed size={18} className="text-orange-500" /> },
-  { name: "Burger", icon: <Pizza size={18} className="text-green-500" /> },
-  { name: "Pasta", icon: <Drumstick size={18} className="text-blue-500" /> },
-  { name: "Sushi", icon: <UtensilsCrossed size={18} className="text-purple-500" /> },
-  { name: "Tacos", icon: <Pizza size={18} className="text-pink-500" /> },
-  { name: "Noodles", icon: <Drumstick size={18} className="text-indigo-500" /> }
+  { name: "Pizza", category:"pizza", icon: <Pizza size={18} className="text-red-500" /> },
+  { name: "Biryani", category: "biryani", icon: <Drumstick size={18} className="text-yellow-500" /> },
+  { name: "Chinese", category: "chinese", icon: <UtensilsCrossed size={18} className="text-orange-500" /> },
+  { name: "Burger", category: "burger", icon: <Pizza size={18} className="text-green-500" /> },
+  { name: "Pasta", category: "pasta", icon: <Drumstick size={18} className="text-blue-500" /> },
+  { name: "Sushi", category: "sushi", icon: <UtensilsCrossed size={18} className="text-purple-500" /> },
+  { name: "Tacos", category: "tacos", icon: <Pizza size={18} className="text-pink-500" /> },
+  { name: "Noodles", category: "noodles",icon: <Drumstick size={18} className="text-indigo-500" /> }
 ];
 
 const Dishes = () => {
@@ -34,7 +34,7 @@ const Dishes = () => {
         {dishes.map((dish, index) => (
           <div
             key={index}
-            onClick={() => router.push("/dishes/" + dish.name)}
+            onClick={() => router.push("/dishes/" + dish.category)}
             className="flex flex-col cursor-pointer items-center min-w-[80px] bg-white dark:bg-gray-800 shadow-md rounded-lg p-2 transition-transform duration-300 hover:scale-105"
           >
             {dish.icon}

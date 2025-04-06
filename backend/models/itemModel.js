@@ -16,19 +16,17 @@ const itemSchema = new mongoose.Schema({
         required : true
     },
 
-    restaurant_name : {
-        type : String,
-        required : true
-    },
-
-    restaurant_id : {
+    client_id: {
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'restaurant',
+        ref : 'user',
         required : true
     },
-    category : {
-        type : String,
-        required : true
+    rating: {
+        type: Number,
+        default: 5
+    },
+    image_url: {
+        type: String
     }
 })
 

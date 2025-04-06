@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from "react";
 import Dishes from "./components/Dishes";
 import Hero from "./components/Hero";

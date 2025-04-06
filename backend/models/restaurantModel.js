@@ -19,6 +19,13 @@ const restaurantSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : 'user',
         required : true
+    },
+    rating: {
+        type: Number,
+    },
+    menu: {
+        type: {},
+        required: true
     }
 })
 

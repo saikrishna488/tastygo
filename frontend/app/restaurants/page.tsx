@@ -1,70 +1,80 @@
-"use client"
-import Image from "next/image";
-import { Star } from "lucide-react"; // Using Lucide icons for the star rating
+"use client";
+
 import Header from "../components/Header";
-
-interface Restaurant {
-  id: number;
-  name: string;
-  image: string;
-  minPrice: number;
-  distance: string;
-  rating: number; // Added rating field
-}
-
-const restaurants: Restaurant[] = [
-  { id: 1, name: "Spicy Bites", image: "/ramen.avif", minPrice: 150, distance: "2.4 km", rating: 4.5 },
-  { id: 2, name: "Tandoori Treats", image: "/dosa.jpg", minPrice: 120, distance: "3.1 km", rating: 4.2 },
-  { id: 3, name: "Biryani House", image: "/biryani.jpg", minPrice: 180, distance: "1.8 km", rating: 4.8 },
-  { id: 4, name: "Burger Hub", image: "/burger.webp", minPrice: 100, distance: "2.9 km", rating: 4.3 },
-  { id: 5, name: "Sushi Express", image: "/sushi.jpg", minPrice: 200, distance: "4.2 km", rating: 4.6 },
-];
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Star, MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const Restaurants = () => {
-  return (
-    <div className="w-full px-4 pt-20 mx-auto lg:w-[80%]">
-      <Header/>
-      <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Popular Restaurants</h2>
+  const [restaurants, setRestaurants] = useState<any[]>([]);
+  const router = useRouter();
 
-      {/* Grid Layout for Responsive Design */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const res = await axios.get(
+          process.env.NEXT_PUBLIC_BACKEND_URL + "/restaurants/"
+        );
+        const data = res.data;
+
+        if (data.res) {
+          setRestaurants(data.restaurants);
+        } else {
+          toast.error("Failed to load items");
+          throw new Error("Item not found");
+        }
+      } catch (err) {
+        toast.error("Item not found");
+      }
+    };
+
+    fetchItems();
+  }, []);
+
+  return (
+    <div className="w-full px-6 pt-24 mx-auto lg:w-[80%]">
+      <Header />
+      <h2 className="text-3xl font-extrabold mb-6 text-gray-900 dark:text-white">
+        Popular Restaurants
+      </h2>
+
+      <div className="space-y-6">
         {restaurants.map((restaurant) => (
-          <div key={restaurant.id} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-            {/* Restaurant Image */}
-            <div className="relative w-full h-40">
-              <Image
-                src={restaurant.image}
-                alt={restaurant.name}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-t-md"
-              />
+          <div
+            key={restaurant._id}
+            onClick={() => router.push('/restaurants/restaurant/' + restaurant._id)}
+            className="flex bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
+          >
+            {/* Content Left */}
+            <div className="flex-1 p-5 flex flex-col justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-gray-800">{restaurant.name}</h3>
+                <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                  {restaurant.description || "No description available."}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
+                <div className="flex items-center">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  {restaurant.distance || "1 km"}
+                </div>
+                <div className="flex items-center text-yellow-500">
+                  <Star className="w-4 h-4 mr-1" />
+                  {restaurant.rating || "4.5"}
+                </div>
+              </div>
             </div>
 
-            {/* Restaurant Details */}
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{restaurant.name}</h3>
-              <p className="text-gray-500 dark:text-gray-300 text-sm">Min Order: Γé╣{restaurant.minPrice}</p>
-              <p className="text-gray-500 dark:text-gray-300 text-sm">Distance: {restaurant.distance}</p>
-
-              {/* Ratings Section */}
-              <div className="flex items-center mt-2">
-                {[...Array(5)].map((_, index) => (
-                  <Star
-                    key={index}
-                    size={16}
-                    className={
-                      index < Math.floor(restaurant.rating)
-                        ? "text-yellow-400"
-                        : "text-gray-300 dark:text-gray-600"
-                    }
-                    fill={index < restaurant.rating ? "currentColor" : "none"}
-                  />
-                ))}
-                <span className="text-sm text-gray-600 dark:text-gray-400 ml-1">
-                  {restaurant.rating.toFixed(1)}
-                </span>
-              </div>
+            {/* Image Right */}
+            <div className="w-40 h-full">
+              <img
+                src={restaurant.image_url || "https://via.placeholder.com/150"}
+                alt={restaurant.name}
+                className="h-full w-full object-cover"
+              />
             </div>
           </div>
         ))}

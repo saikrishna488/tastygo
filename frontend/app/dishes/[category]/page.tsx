@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, Key } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const items = [
   { name: "Margherita", image: "/pizza.webp", restaurant: "Pizza Palace", rating: 4.5, price: "$12.99", category: "Pizza" },
@@ -17,16 +19,32 @@ const items = [
 const Dishes = () => {
   const { category } = useParams();
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState<any>(category || "Pizza");
+  const [dishes,setDishes] = useState<any>([])
 
-  useEffect(() => {
-    if (category) {
-      setSelectedCategory(category);
+
+  useEffect(()=>{
+
+    const fetchItems = async()=>{
+
+      const res = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+"/dishes/"+category);
+      const data = res.data
+
+      if(data.res){
+        setDishes(data.dishes)
+      }
+      else{
+        toast.error("Failed to load items")
+        throw new Error("Failed to load items")
+        
+      }
     }
-  }, [category]);
 
-  const filteredItems = items.filter(item => item.category.toLowerCase() === selectedCategory.toLowerCase());
+    fetchItems()
 
+  },[])
+
+
+  
   return (
     <section className="relative pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="flex items-center mb-4">
@@ -34,18 +52,15 @@ const Dishes = () => {
           <ArrowLeft size={20} className="mr-2" /> Back
         </button>
       </div>
-      <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 dark:text-white mb-6 capitalize">
-        {category || "Dishes"}
-      </h2>
-      {filteredItems.length > 0 ? (
+      {dishes.length > 0 ? (
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredItems.map((dish, index) => (
-            <div key={index} className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md transition-transform hover:scale-105">
-              <Image src={dish.image} alt={dish.name} width={150} height={100} className="w-full h-28 object-cover rounded-md" />
+          {dishes.map((dish:any, index:Key) => (
+            <div onClick={()=> router.push("/item/"+dish._id)} key={index} className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md transition-transform hover:scale-105">
+              <Image src={dish.image_url} alt={dish.name} width={150} height={100} className="w-full h-28 object-cover rounded-md" />
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white mt-2">{dish.name}</h3>
-              <p className="text-xs text-gray-600 dark:text-gray-300">{dish.restaurant}</p>
-              <p className="text-xs text-yellow-500">⭐ {dish.rating}</p>
-              <p className="text-xs font-semibold text-gray-900 dark:text-white">{dish.price}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-300">{dish.restaurant_name}</p>
+              <p className="text-xs text-yellow-500">⭐ {dish.rating || "4.5"}</p>
+              <p className="text-xs font-semibold text-gray-900 dark:text-white">{dish.price} Rs</p>
             </div>
           ))}
         </div>

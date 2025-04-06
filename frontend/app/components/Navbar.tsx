@@ -4,13 +4,15 @@ import { ShoppingCart, User, Bell, Package, LogOut } from "lucide-react";
 import { useAtom } from "jotai";
 import { userAtom } from "@/states/global_states";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter,usePathname } from "next/navigation";
+import Cookies from 'js-cookie'
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<any>(null);
-  const [user] = useAtom<any>(userAtom);
+  const [user, setUser] = useAtom<any>(userAtom);
   const router = useRouter();
+  const path = usePathname()
 
   const menuItems = [
     { label: "Profile", href: "/profile", icon: <User className="h-5 w-5" /> },
@@ -28,6 +30,17 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  if(path.includes("/partners")){
+    return null
+  }
+
+  //logout
+  const logout = ()=>{
+    setUser({})
+    setIsDropdownOpen(false)
+    Cookies.remove('token')
+  }
 
   return (
     <nav className="fixed top-0 w-full bg-white shadow-md dark:bg-gray-900 z-20">
@@ -82,10 +95,7 @@ const Navbar = () => {
                     <hr className="border-gray-200 dark:border-gray-700" />
                     <button
                       className="flex w-full items-center px-4 py-2 text-sm text-red-500 transition-all duration-150 ease-in-out hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
-                      onClick={() => {
-                        setIsDropdownOpen(false);
-                        // Add logout functionality here
-                      }}
+                      onClick={logout}
                     >
                       <LogOut className="h-5 w-5" />
                       <span className="ml-2">Logout</span>

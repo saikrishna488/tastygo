@@ -13,7 +13,6 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useAtom(userAtom);
   const router = useRouter();
 
   const userRegister = async (e: any) => {
@@ -25,7 +24,7 @@ const Register = () => {
         return;
       }
 
-      const res = await axios.post("/api/register", {
+      const res = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+"/register", {
         name,
         email,
         phone,
@@ -39,6 +38,7 @@ const Register = () => {
         router.push("/login");
       }
     } catch (err) {
+      console.log(err)
       toast.error("Registration failed. Try again.");
     }
   };
