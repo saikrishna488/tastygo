@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000  // ✅ Default must be 8080 for Cloud Run
 
 // Middlewares
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://tastygo.vercel.app',
     credentials: true
 }))
 app.use(express.json({ limit: '10mb' }))
